@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body>
+  <div id="container">
+    <iframe src="frame.html" id="firstIframe"></iframe>
+  </div>
+  <script>
+  (function() {
+    const problemFn = () =>
+    {
+      console.log('There was an error');
+    };
+    const successFn = () =>
+    {
+      console.log('It was a success');
+    }
+    let iframeMsgCount = 0;
+    let iFrame = document.createElement("iframe");
+    iFrame.src = "frame.html";
+    iFrame.id="secondIframe";
+    setTimeout(() =>
+    {
+      document.getElementById("container").appendChild(iFrame);
+      setTimeout(() =>
+      {
+        const iFrame1 = document.getElementById('firstIframe');
+        const iFrame2 = document.getElementById('secondIframe');
+        iFrame1.contentWindow.postMessage('getColor','*');
+        iFrame2.contentWindow.postMessage('getColor','*');
+      }, 1000);
+    }, 3000);
+    window.addEventListener('message',(e)=>
+    {
+      iframeMsgCount++;
+      if(!e.data)
+      {
+        problemFn();
+      }
+      if(iframeMsgCount === 2)
+      {
+        successFn();
+      }
+    });
+  })();
+  </script>
+</body>
+
+</html>

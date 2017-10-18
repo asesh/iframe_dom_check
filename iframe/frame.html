@@ -1,0 +1,19 @@
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="https://6163b91031be8b8bc9bd3c164ac533d6.s3.amazonaws.com/e54dd39cf7c2c3a0ae15a402c187da79/assets/main.css.gz">
+</head>
+
+<body>
+  <div class="red" style="border:1px solid black">IFRAME DIV</div>
+<script>
+  window.onmessage = (e) => {
+    const iframeDiv = document.getElementsByClassName('red')[0];
+    const style =	window.getComputedStyle(iframeDiv);
+    const divColor = style.getPropertyValue('background-color');
+    parent.postMessage(divColor == 'rgb(255, 0, 0)',"*");
+  }
+  </script>
+</body>
+
+</html>
