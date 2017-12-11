@@ -26,41 +26,61 @@ function is_language_translation_issue_present()
   return true;
 }
 
+// Invoked when DOM subtree will be modified by Google Translate after translation
+document.addEventListener('DOMSubtreeModified', function (e)
+{
+  if(e.target.tagName === 'HTML' && window.google)
+  {
+    if(e.target.className.match('translated'))
+    {
+        alert('This page has been translated');
+    }
+    else
+    {
+        alert('Translation cancelled');
+    }
+  }
+}, true);
+
 // DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function()
 {
   // Store the handle of table cells where we will post our result
-  var iframe_issue_cell = document.getElementById("issue_table").rows[0].cells;
-  var mp3_issue_cell = document.getElementById("issue_table").rows[1].cells;
-  var language_translation_issue_cell = document.getElementById("issue_table").rows[2].cells;
+  var issue_table = document.getElementById("issue_table");
+  var iframe_issue_cell = issue_table.rows[1].cells.item(1);
+  var mp3_issue_cell = issue_table.rows[2].cells.item(1);
+  var language_translation_issue_cell = issue_table.rows[3].cells.item(1);
+
+  var success_label = "Success";
+  var failed_label = "Failed";
 
   // Let's check if mp3 is supported by the browser or not
-  if(is_mp3_supported())
+  if(is_mp3_supported()) // MP3 is supported
   {
-    mp3_issue_cell.innerHTML = "Success";
+    mp3_issue_cell.innerHTML = success_label;
   }
-  else
+  else // MP3 is not supported
   {
-    mp3_issue_cell.innerHTML = "Failed";
+    mp3_issue_cell.innerHTML = failed_label;
   }
 
   // Let's check iframe issue
-  if(is_iframe_issue_present())
+  if(is_iframe_issue_present()) // iframe issue is present
   {
-    iframe_issue_cell.innerHTML = "Success";
+    iframe_issue_cell.innerHTML = failed_label;
   }
-  else
+  else // iframe issue is not present
   {
-    iframe_issue_cell.innerHTML = "Failed";
+    iframe_issue_cell.innerHTML = success_label;
   }
 
   // Let's check language translation issue
-  if(is_language_translation_issue_present())
+  if(is_language_translation_issue_present()) // Language translation issue is present
   {
-    language_translation_issue_cell.innerHTML = "Sucess";
+    language_translation_issue_cell.innerHTML = failed_label;
   }
-  else
+  else // Language translation issue is not present
   {
-    language_translation_issue_cell.innerHTML = "Failed";
+    language_translation_issue_cell.innerHTML = success_label;
   }
 }, false);

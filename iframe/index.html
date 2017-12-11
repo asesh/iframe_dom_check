@@ -20,7 +20,7 @@
     let iframeMsgCount = 0;
     let iFrame = document.createElement("iframe");
     iFrame.src = "frame.html";
-    iFrame.id="secondIframe";
+    iFrame.id = "secondIframe";
     setTimeout(() =>
     {
       document.getElementById("container").appendChild(iFrame);
@@ -28,8 +28,8 @@
       {
         const iFrame1 = document.getElementById('firstIframe');
         const iFrame2 = document.getElementById('secondIframe');
-        iFrame1.contentWindow.postMessage('getColor','*');
-        iFrame2.contentWindow.postMessage('getColor','*');
+        iFrame1.contentWindow.postMessage('getColor', '*');
+        iFrame2.contentWindow.postMessage('getColor', '*');
       }, 1000);
     }, 3000);
     window.addEventListener('message',(e)=>
