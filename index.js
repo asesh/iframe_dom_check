@@ -6,6 +6,10 @@
 // 2: Detect Google Chrome translation: https://stackoverflow.com/questions/4887156/detecting-google-chrome-translation
 //
 
+// Global variables
+var g_success_label = "Success";
+var g_failed_label = "Failed";
+
 // Checks if mp3 is supported by the browser or not
 function is_mp3_supported()
 {
@@ -14,10 +18,40 @@ function is_mp3_supported()
   return !!(audio_element.canPlayType && audio_element.canPlayType('audio/mpeg;').replace(/no/, ''));
 }
 
+function set_iframe_issue_status(status) {
+  document.getElementById("issue_table").rows[1].cells.item(1).textContent = status;
+}
+
 // Checks if iframe issue is present or not
 function is_iframe_issue_present()
 {
-  return true;
+  let iframeMsgCount = 0;
+  let iFrame = document.createElement("iframe");
+  iFrame.src = "iframe/frame.html";
+  iFrame.id = "secondIframe";
+  setTimeout(() =>
+  {
+    document.getElementById("container").appendChild(iFrame);
+    setTimeout(() =>
+    {
+      const iFrame1 = document.getElementById('firstIframe');
+      const iFrame2 = document.getElementById('secondIframe');
+      iFrame1.contentWindow.postMessage('getColor', '*');
+      iFrame2.contentWindow.postMessage('getColor', '*');
+    }, 1000);
+  }, 3000);
+  window.addEventListener('message',(e)=>
+    {
+      iframeMsgCount++;
+      if(!e.data)
+      {
+        set_iframe_issue_status(g_failed_label);
+      }
+      if(iframeMsgCount === 2)
+      {
+        set_iframe_issue_status(g_success_label);
+      }
+    });
 }
 
 // Checks if language translation issue is present or not
@@ -49,38 +83,18 @@ document.addEventListener('DOMContentLoaded', function()
   var issue_table = document.getElementById("issue_table");
   var iframe_issue_cell = issue_table.rows[1].cells.item(1);
   var mp3_issue_cell = issue_table.rows[2].cells.item(1);
-  var language_translation_issue_cell = issue_table.rows[3].cells.item(1);
-
-  var success_label = "Success";
-  var failed_label = "Failed";
+  //var language_translation_issue_cell = issue_table.rows[3].cells.item(1);
 
   // Let's check if mp3 is supported by the browser or not
   if(is_mp3_supported()) // MP3 is supported
   {
-    mp3_issue_cell.innerHTML = success_label;
+    mp3_issue_cell.innerHTML = g_success_label;
   }
   else // MP3 is not supported
   {
-    mp3_issue_cell.innerHTML = failed_label;
+    mp3_issue_cell.innerHTML = g_failed_label;
   }
 
-  // Let's check iframe issue
-  if(is_iframe_issue_present()) // iframe issue is present
-  {
-    iframe_issue_cell.innerHTML = failed_label;
-  }
-  else // iframe issue is not present
-  {
-    iframe_issue_cell.innerHTML = success_label;
-  }
+  is_iframe_issue_present();
 
-  // Let's check language translation issue
-  if(is_language_translation_issue_present()) // Language translation issue is present
-  {
-    language_translation_issue_cell.innerHTML = failed_label;
-  }
-  else // Language translation issue is not present
-  {
-    language_translation_issue_cell.innerHTML = success_label;
-  }
 }, false);
