@@ -54,28 +54,6 @@ function is_iframe_issue_present()
     });
 }
 
-// Checks if language translation issue is present or not
-function is_language_translation_issue_present()
-{
-  return true;
-}
-
-// Invoked when DOM subtree will be modified by Google Translate after translation
-document.addEventListener('DOMSubtreeModified', function (e)
-{
-  if(e.target.tagName === 'HTML' && window.google)
-  {
-    if(e.target.className.match('translated'))
-    {
-        alert('This page has been translated');
-    }
-    else
-    {
-        alert('Translation cancelled');
-    }
-  }
-}, true);
-
 // DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function()
 {
